@@ -58,4 +58,5 @@ edge-morphe-patches/
 - [2026-06-05] `morphe-cli` parameter parsing error -> `-i` option consumed the positional `<apk>` parameter as device serial -> Fixed by putting the positional `<apk>` parameter before the `-i` flag.
 - [2026-06-05] Patches showed "any package, any version" in Morphe Manager -> None of the patches called `compatibleWith()` -> Fixed by creating `EdgeCompatibility.kt` and adding `compatibleWith(EDGE_COMPATIBILITY)` to all three patches.
 - [2026-06-05] Adding repo source to Morphe Manager failed with 'Source URL maybe incorrect or file doesnt exist' -> Missing `dev` branch on remote repository when pre-release was toggled, and prefix 'v' mismatch on `patches-list.json` -> Fixed by pushing `dev` branch and removing 'v' from version in `patches-list.json`.
+- [2026-06-05] Morphe Manager displayed 'metadata N/A' for remote source -> Suffix 'Z' on `created_at` timestamp in `patches-bundle.json` caused parsing exceptions in Android -> Fixed by removing the 'Z' suffix to match the local date-time format used by other repositories.
 
