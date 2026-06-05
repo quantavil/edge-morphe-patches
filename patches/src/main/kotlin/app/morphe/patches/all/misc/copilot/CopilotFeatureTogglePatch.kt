@@ -2,6 +2,7 @@ package app.morphe.patches.all.misc.copilot
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patches.all.misc.EDGE_COMPATIBILITY
 import app.morphe.util.returnEarly
 import java.util.logging.Logger
 
@@ -24,6 +25,8 @@ val copilotFeatureTogglePatch = bytecodePatch(
     description = "Disables all Copilot and Bing Chat feature flags by forcing " +
             "boolean feature evaluation methods to return false.",
 ) {
+    compatibleWith(EDGE_COMPATIBILITY)
+
     execute {
         // Resolve the fingerprint to find the target class containing Copilot feature flags.
         val copilotClass = CopilotFeatureFlagFingerprint.classDef

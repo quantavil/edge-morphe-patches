@@ -3,6 +3,7 @@ package app.morphe.patches.all.misc.telemetry
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patches.all.misc.EDGE_COMPATIBILITY
 import app.morphe.util.findMutableMethodOf
 import app.morphe.util.returnEarly
 import com.android.tools.smali.dexlib2.Opcode
@@ -35,6 +36,8 @@ val telemetryEliminationPatch = bytecodePatch(
     description = "Eliminates Microsoft Edge telemetry by redirecting data collection endpoints " +
             "to localhost and short-circuiting OneDS Logger event methods.",
 ) {
+    compatibleWith(EDGE_COMPATIBILITY)
+
     execute {
         // ──────────────────────────────────────────────────────────────────────
         // Step 1: Replace all telemetry endpoint strings with localhost.

@@ -38,6 +38,7 @@
 package app.morphe.patches.all.misc.updates
 
 import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patches.all.misc.EDGE_COMPATIBILITY
 import app.morphe.util.getNode
 import org.w3c.dom.Element
 
@@ -49,6 +50,8 @@ internal val disablePlayStoreUpdatesPatch = resourcePatch(
             "issues with some apps.",
     default = false
 ) {
+    compatibleWith(EDGE_COMPATIBILITY)
+
     finalize {
         document("AndroidManifest.xml").use { document ->
             val manifest = document.getNode("manifest") as Element

@@ -33,10 +33,15 @@ All modifications made by Morphe, along with their dates, can be found in the Gi
 
 &nbsp;
 ## 🩹 Patches<!-- PATCHES_START -->
-> **[v1.30.0](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.30.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;3 patches total
+> **[v1.30.1](https://github.com/quantavil/edge-morphe-patches/releases/tag/v1.30.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;3 patches total
 <details open>
-<summary>🌐 Universal&nbsp;&nbsp;•&nbsp;&nbsp;3 patches</summary>
+<summary>📦 Microsoft Edge&nbsp;&nbsp;•&nbsp;&nbsp;3 patches</summary>
 <br>
+
+**🎯 Supported versions:**
+
+| 148.0.3967.97 |
+| :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
