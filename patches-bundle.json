@@ -1,0 +1,7 @@
+{
+  "created_at": "2026-05-29T07:23:56",
+  "description": "## [1.30.0](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.30.0) (2026-05-29)\n\n### 🌐 Universal Patches\n\n* **Change package name**\n* **Copilot feature toggle**\n* **Disable Play Store updates**\n* **Telemetry elimination**",
+  "download_url": "https://github.com/MorpheApp/morphe-patches/releases/download/v1.30.0/patches-1.30.0.mpp",
+  "signature_download_url": "",
+  "version": "1.30.0"
+}

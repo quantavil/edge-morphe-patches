@@ -1,0 +1,32 @@
+# Dependencies must also be addded to LicensesDialog.java
+
+[versions]
+morphe-patcher = "1.5.1"
+morphe-patches-library = "1.4.0-dev.5"
+# Tracking https://github.com/google/smali/issues/100.
+smali = "d92701d947"
+agp = "9.1.0"
+annotation = "1.9.1"
+androidx-core = "1.16.0"
+androidx-javascriptengine = "1.1.0-alpha01"
+gson = "2.14.0"
+guava = "33.5.0-jre"
+hiddenapi = "6.1"
+protobuf = "0.9.6"
+protoc = "4.34.1"
+
+[libraries]
+morphe-patches-library = { module = "app.morphe:morphe-patches-library", version.ref = "morphe-patches-library" }
+morphe-extensions-library = { module = "app.morphe:morphe-extensions-library", version.ref = "morphe-patches-library" }
+annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
+androidx-core = { module = "androidx.core:core", version.ref = "androidx-core" }
+androidx-javascriptengine = { module = "androidx.javascriptengine:javascriptengine", version.ref = "androidx-javascriptengine" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
+hiddenapi = { module = "org.lsposed.hiddenapibypass:hiddenapibypass", version.ref = "hiddenapi" }
+protobuf-javalite = { module = "com.google.protobuf:protobuf-javalite", version.ref = "protoc" }
+protobuf-protoc = { module = "com.google.protobuf:protoc", version.ref = "protoc" }
+
+[plugins]
+android-library = { id = "com.android.library" }
+protobuf = { id = "com.google.protobuf", version.ref = "protobuf" }
