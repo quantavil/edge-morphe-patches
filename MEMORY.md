@@ -50,10 +50,12 @@ edge-morphe-patches/
 - One-Click Deployment: `run_pipeline.sh` builds patches, purges the `morphe-data/tmp` cache, runs patcher, signs the APK, and deploys it to the ADB connected device.
 - Changing Base APK / Future Verification: When upgrading `edge_base.apk`, if version compatibility check fails, use `./run_pipeline.sh -f` to bypass, or add the new version to the `Compatibility` configuration in the patch classes source code.
 - Compatibility: Without `compatibleWith()`, patches show as "any package, any version" in Morphe Manager. Use shared `EDGE_COMPATIBILITY` from `EdgeCompatibility.kt`.
+- Branching: Morphe Manager's "Use pre-release patches" setting fetches patches from the `dev` branch. Keeping a `dev` branch synced to origin prevents 404 download errors.
 
 
 ## Blunders
 - [2026-06-05] `morphe-cli` patch failed due to `edge_base.apk` being reported as modified -> The `morphe-data/tmp/` directory was dirty from prior runs -> Fixed by clearing `morphe-data/tmp/*` before patching.
 - [2026-06-05] `morphe-cli` parameter parsing error -> `-i` option consumed the positional `<apk>` parameter as device serial -> Fixed by putting the positional `<apk>` parameter before the `-i` flag.
 - [2026-06-05] Patches showed "any package, any version" in Morphe Manager -> None of the patches called `compatibleWith()` -> Fixed by creating `EdgeCompatibility.kt` and adding `compatibleWith(EDGE_COMPATIBILITY)` to all three patches.
+- [2026-06-05] Adding repo source to Morphe Manager failed with 'Source URL maybe incorrect or file doesnt exist' -> Missing `dev` branch on remote repository when pre-release was toggled, and prefix 'v' mismatch on `patches-list.json` -> Fixed by pushing `dev` branch and removing 'v' from version in `patches-list.json`.
 
