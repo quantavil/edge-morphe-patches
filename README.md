@@ -75,9 +75,8 @@ If you replace `edge_base.apk` in the root directory with a newer version of Edg
 
 ## Contributing
 
-We currently accept pull requests for fixes/improvements to YouTube, YT Music, and Reddit.
-If you have developed patches for other apps, you are encouraged to release your patches in a third party repository.
-See the [Patches template](https://github.com/morpheapp/morphe-patches-template) for more information.  
+Contributions are welcome! If you'd like to improve existing patches or propose new ones for Microsoft Edge, feel free to open a pull request.
+See the [Patches template](https://github.com/morpheapp/morphe-patches-template) for guidance on creating new patches.
 
 
 ## 📜 License

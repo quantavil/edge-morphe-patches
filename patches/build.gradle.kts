@@ -2,12 +2,12 @@ group = "app.morphe"
 
 patches {
     about {
-        name = "Morphe Patches"
-        description = "Patches for Morphe"
-        source = "git@github.com:MorpheApp/morphe-patches.git"
-        author = "MorpheApp"
-        contact = "na"
-        website = "https://morphe.software"
+        name = "Edge Morphe Patches"
+        description = "Microsoft Edge patches for Morphe"
+        source = "https://github.com/quantavil/edge-morphe-patches.git"
+        author = "quantavil"
+        contact = "https://github.com/quantavil"
+        website = "https://github.com/quantavil/edge-morphe-patches"
         license = "GNU General Public License v3.0, with additional GPL section 7 requirements"
     }
 }

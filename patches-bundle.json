@@ -1,6 +1,6 @@
 {
   "created_at": "2026-06-05T07:08:18",
-  "description": "## [1.30.1](https://github.com/quantavil/edge-morphe-patches/releases/tag/v1.30.1) (2026-06-05)\n\n### 📦 Microsoft Edge Patches\n\n* **Copilot feature toggle**\n* **Disable Play Store updates**\n* **Telemetry elimination**",
+  "description": "## [1.30.1](https://github.com/quantavil/edge-morphe-patches/releases/tag/v1.30.1) (2026-06-05)\n\n### \ud83d\udce6 Microsoft Edge Patches\n\n* **Copilot feature toggle**\n* **Disable Play Store updates**\n* **Telemetry elimination**",
   "download_url": "https://github.com/quantavil/edge-morphe-patches/releases/download/v1.30.1/patches-1.30.1.mpp",
   "signature_download_url": "",
   "version": "1.30.1"

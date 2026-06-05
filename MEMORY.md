@@ -10,6 +10,7 @@ edge-morphe-patches/
 ├── settings.gradle.kts           # Gradle settings configuration
 ├── patches-list.json             # Lists details of available universal patches
 ├── patches-bundle.json           # Metadata bundle for the patches
+├── sync_version.py               # Version synchronization script
 ├── documentation/                # Cloned Morphe patcher developer documentation
 ├── extensions/                   # Proguard rules for extensions
 │   └── proguard-rules.pro
@@ -51,6 +52,9 @@ edge-morphe-patches/
 - Changing Base APK / Future Verification: When upgrading `edge_base.apk`, if version compatibility check fails, use `./run_pipeline.sh -f` to bypass, or add the new version to the `Compatibility` configuration in the patch classes source code.
 - Compatibility: Without `compatibleWith()`, patches show as "any package, any version" in Morphe Manager. Use shared `EDGE_COMPATIBILITY` from `EdgeCompatibility.kt`.
 - Branching: Morphe Manager's "Use pre-release patches" setting fetches patches from the `dev` branch. Keeping a `dev` branch synced to origin prevents 404 download errors.
+- Imports: `PatchException` → `app.morphe.patcher.patch.PatchException`. `string()` filter → `app.morphe.patcher.string` (from `InstructionFilterKt`).
+- Fingerprints: Prefer `filters = listOf(string(...))` over `strings = listOf(...)` per Morphe docs convention.
+- Fingerprints: Use `matchAllOrNull()` for replacing string literals/constants globally across matched methods, avoiding full class iteration.
 
 
 ## Blunders
@@ -59,4 +63,5 @@ edge-morphe-patches/
 - [2026-06-05] Patches showed "any package, any version" in Morphe Manager -> None of the patches called `compatibleWith()` -> Fixed by creating `EdgeCompatibility.kt` and adding `compatibleWith(EDGE_COMPATIBILITY)` to all three patches.
 - [2026-06-05] Adding repo source to Morphe Manager failed with 'Source URL maybe incorrect or file doesnt exist' -> Missing `dev` branch on remote repository when pre-release was toggled, and prefix 'v' mismatch on `patches-list.json` -> Fixed by pushing `dev` branch and removing 'v' from version in `patches-list.json`.
 - [2026-06-05] Morphe Manager displayed 'metadata N/A' for remote source -> Suffix 'Z' on `created_at` timestamp in `patches-bundle.json` caused parsing exceptions in Android -> Fixed by removing the 'Z' suffix to match the local date-time format used by other repositories.
+- [2026-06-05] `patches/build.gradle.kts` about block used upstream Morphe identity (name, author, source, website) -> GPLv3 Section 7c violation: derivative works must adopt different identity -> Fixed by updating to quantavil's own values.
 

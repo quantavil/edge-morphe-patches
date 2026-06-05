@@ -1,10 +1,12 @@
 package app.morphe.patches.all.misc.telemetry
 
+import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.string
 import app.morphe.patches.all.misc.EDGE_COMPATIBILITY
-import app.morphe.util.findMutableMethodOf
 import app.morphe.util.returnEarly
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21c
@@ -35,6 +37,7 @@ val telemetryEliminationPatch = bytecodePatch(
     name = "Telemetry elimination",
     description = "Eliminates Microsoft Edge telemetry by redirecting data collection endpoints " +
             "to localhost and short-circuiting OneDS Logger event methods.",
+    default = true,
 ) {
     compatibleWith(EDGE_COMPATIBILITY)
 
@@ -51,45 +54,44 @@ val telemetryEliminationPatch = bytecodePatch(
 
         var stringReplacementCount = 0
 
-        classDefForEach { classDef ->
-            classDef.methods.forEach { method ->
-                val implementation = method.implementation ?: return@forEach
+        endpointReplacements.forEach { (endpoint, replacement) ->
+            val stringFilter = string(endpoint)
+            val fingerprint = Fingerprint(filters = listOf(stringFilter))
 
-                val matchingIndices = mutableListOf<Pair<Int, String>>()
+            fingerprint.matchAllOrNull()?.forEach { match ->
+                val method = match.method
+                val implementation = method.implementation ?: return@forEach
+                val matchingIndices = mutableListOf<Int>()
 
                 implementation.instructions.forEachIndexed { index, instruction ->
                     val ref = (instruction as? ReferenceInstruction)
                         ?.reference as? StringReference ?: return@forEachIndexed
 
-                    endpointReplacements.keys.forEach { endpoint ->
-                        if (ref.string == endpoint) {
-                            matchingIndices.add(index to endpoint)
-                        }
+                    if (ref.string == endpoint) {
+                        matchingIndices.add(index)
                     }
                 }
 
-                if (matchingIndices.isNotEmpty()) {
-                    val mutableClass = mutableClassDefBy(classDef)
-                    val mutableMethod = mutableClass.findMutableMethodOf(method)
+                // Process indices in reverse order to avoid index shifts.
+                matchingIndices.asReversed().forEach { index ->
+                    val register = method.getInstruction<OneRegisterInstruction>(index).registerA
 
-                    // Process indices in reverse order to avoid index shifts.
-                    matchingIndices.asReversed().forEach { (index, endpoint) ->
-                        val register = mutableMethod.getInstruction<OneRegisterInstruction>(index).registerA
-                        val replacement = endpointReplacements[endpoint]!!
-
-                        mutableMethod.replaceInstruction(
-                            index,
-                            BuilderInstruction21c(
-                                Opcode.CONST_STRING,
-                                register,
-                                ImmutableStringReference(replacement),
-                            )
+                    method.replaceInstruction(
+                        index,
+                        BuilderInstruction21c(
+                            Opcode.CONST_STRING,
+                            register,
+                            ImmutableStringReference(replacement),
                         )
+                    )
 
-                        stringReplacementCount++
-                    }
+                    stringReplacementCount++
                 }
             }
+        }
+
+        if (stringReplacementCount == 0) {
+            throw PatchException("No telemetry endpoint strings found — endpoints may have changed")
         }
 
         logger.info("Replaced $stringReplacementCount telemetry endpoint string(s)")
@@ -107,6 +109,10 @@ val telemetryEliminationPatch = bytecodePatch(
                 method.returnEarly()
                 shortCircuitCount++
             }
+        }
+
+        if (shortCircuitCount == 0) {
+            throw PatchException("No OneDS Logger methods found — Logger class may have changed")
         }
 
         logger.info("Short-circuited $shortCircuitCount Logger method(s)")
