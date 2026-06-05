@@ -43,3 +43,6 @@ google-services.json
 
 # NPM modules
 node_modules/
+
+# Audit report
+audit.md

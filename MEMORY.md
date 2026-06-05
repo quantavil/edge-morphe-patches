@@ -55,6 +55,7 @@ edge-morphe-patches/
 - Imports: `PatchException` → `app.morphe.patcher.patch.PatchException`. `string()` filter → `app.morphe.patcher.string` (from `InstructionFilterKt`).
 - Fingerprints: Prefer `filters = listOf(string(...))` over `strings = listOf(...)` per Morphe docs convention.
 - Fingerprints: Use `matchAllOrNull()` for replacing string literals/constants globally across matched methods, avoiding full class iteration.
+- Patches: Crash Reporting and First-Run Experience (FRE) patches were excluded because their targets/classes (`Lerh`, `Lkrh`) and internal methods are obfuscated, which violates the no-obfuscation project rule.
 
 
 ## Blunders
