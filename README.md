@@ -28,7 +28,7 @@ Morphe Patches for Microsoft Edge
 
 &nbsp;
 ## 🩹 Patches<!-- PATCHES_START -->
-> **[v1.30.1](https://github.com/quantavil/edge-morphe-patches/releases/tag/v1.30.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;3 patches total
+> **[v1.31.0](https://github.com/quantavil/edge-morphe-patches/releases/tag/v1.31.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;3 patches total
 <details open>
 <summary>📦 Microsoft Edge&nbsp;&nbsp;•&nbsp;&nbsp;3 patches</summary>
 <br>
