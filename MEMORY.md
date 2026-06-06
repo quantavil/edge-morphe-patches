@@ -5,6 +5,9 @@ Edge Morphe Patches is a repository containing Android application patches (Disa
 
 ## Structure
 .
+├── .github/
+│   └── workflows/
+│       └── release.yml           # GitHub Actions workflow for automatic patch compiling and release publishing
 ├── MEMORY.md                     # Project memory
 ├── build.gradle.kts              # Gradle build configuration
 ├── settings.gradle.kts           # Gradle settings configuration
