@@ -39,7 +39,7 @@ Morphe Patches for Microsoft Edge
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description |
-|----------|----------------|-----------|
+|----------|----------------|
 | [Copilot feature toggle](#copilot-feature-toggle) | Disables all Copilot and Bing Chat feature flags by forcing boolean feature evaluation methods to return false. |
 | [Disable Play Store updates](#disable-play-store-updates) | Disables Play Store updates by setting the version code to the maximum allowed. This patch does not work if the app is installed by mounting and may cause unexpected issues with some apps. |
 | [Telemetry elimination](#telemetry-elimination) | Eliminates Microsoft Edge telemetry by redirecting data collection endpoints to localhost and short-circuiting OneDS Logger event methods. |
