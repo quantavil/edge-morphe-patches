@@ -12,5 +12,6 @@ val EDGE_COMPATIBILITY = Compatibility(
     name = "Microsoft Edge",
     targets = listOf(
         AppTarget(version = "148.0.3967.97"),
+        AppTarget(version = "149.0.4022.53"),
     ),
 )

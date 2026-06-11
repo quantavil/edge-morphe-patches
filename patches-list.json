@@ -1,5 +1,5 @@
 {
-  "version": "1.31.0",
+  "version": "1.32.0",
   "patches": [
     {
       "name": "Copilot feature toggle",
@@ -17,6 +17,12 @@
           "targets": [
             {
               "version": "148.0.3967.97",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
+            {
+              "version": "149.0.4022.53",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -45,6 +51,12 @@
               "isExperimental": false,
               "minSdk": null,
               "description": null
+            },
+            {
+              "version": "149.0.4022.53",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
             }
           ]
         }
@@ -67,6 +79,12 @@
           "targets": [
             {
               "version": "148.0.3967.97",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
+            {
+              "version": "149.0.4022.53",
               "isExperimental": false,
               "minSdk": null,
               "description": null

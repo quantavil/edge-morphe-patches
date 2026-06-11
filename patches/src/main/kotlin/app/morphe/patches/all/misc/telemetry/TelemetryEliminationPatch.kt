@@ -1,18 +1,16 @@
 package app.morphe.patches.all.misc.telemetry
 
-import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.string
 import app.morphe.patches.all.misc.EDGE_COMPATIBILITY
+import app.morphe.util.matchAllMethodIndicesForEach
 import app.morphe.util.returnEarly
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21c
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
-import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
-import com.android.tools.smali.dexlib2.iface.reference.StringReference
 import com.android.tools.smali.dexlib2.immutable.reference.ImmutableStringReference
 import java.util.logging.Logger
 
@@ -55,38 +53,16 @@ val telemetryEliminationPatch = bytecodePatch(
         var stringReplacementCount = 0
 
         endpointReplacements.forEach { (endpoint, replacement) ->
-            val stringFilter = string(endpoint)
-            val fingerprint = Fingerprint(filters = listOf(stringFilter))
-
-            fingerprint.matchAllOrNull()?.forEach { match ->
-                val method = match.method
-                val implementation = method.implementation ?: return@forEach
-                val matchingIndices = mutableListOf<Int>()
-
-                implementation.instructions.forEachIndexed { index, instruction ->
-                    val ref = (instruction as? ReferenceInstruction)
-                        ?.reference as? StringReference ?: return@forEachIndexed
-
-                    if (ref.string == endpoint) {
-                        matchingIndices.add(index)
-                    }
-                }
-
-                // Process indices in reverse order to avoid index shifts.
-                matchingIndices.asReversed().forEach { index ->
-                    val register = method.getInstruction<OneRegisterInstruction>(index).registerA
-
-                    method.replaceInstruction(
-                        index,
-                        BuilderInstruction21c(
-                            Opcode.CONST_STRING,
-                            register,
-                            ImmutableStringReference(replacement),
-                        )
+            string(endpoint).matchAllMethodIndicesForEach(requireMatches = false) { index ->
+                replaceInstruction(
+                    index,
+                    BuilderInstruction21c(
+                        Opcode.CONST_STRING,
+                        getInstruction<OneRegisterInstruction>(index).registerA,
+                        ImmutableStringReference(replacement),
                     )
-
-                    stringReplacementCount++
-                }
+                )
+                stringReplacementCount++
             }
         }
 

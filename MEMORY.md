@@ -46,7 +46,7 @@ Edge Morphe Patches is a repository containing Android application patches (Disa
 
 ## Critical Information
 - Any derivative patch set must not use the name "Morphe" as per the Section 7 terms of GPLv3 license.
-- Base APK: `edge_base.apk` in project root (Edge 148.0.3967.97, com.microsoft.emmx, arm64-v8a).
+- Base APK: `edge_base.apk` in project root (Edge 149.0.4022.53, com.microsoft.emmx, arm64-v8a).
 
 ## Insights
 - Telemetry: OneDS Logger at `Lcom/microsoft/applications/events/Logger;` — short-circuit all `log*()V` methods.
@@ -56,7 +56,8 @@ Edge Morphe Patches is a repository containing Android application patches (Disa
 - Changing Base APK / Future Verification: When upgrading `edge_base.apk`, if version compatibility check fails, use `./run_pipeline.sh -f` to bypass, or add the new version to the `Compatibility` configuration in the patch classes source code.
 - Branching: Morphe Manager's "Use pre-release patches" setting fetches patches from the `dev` branch. Keeping a `dev` branch synced to origin prevents 404 download errors.
 - Fingerprints: Prefer `filters = listOf(string(...))` over `strings = listOf(...)` per Morphe docs convention.
-- Fingerprints: Use `matchAllOrNull()` for replacing string literals/constants globally across matched methods, avoiding full class iteration.
+- Fingerprints: Use `matchAllMethodIndicesForEach` from `app.morphe.util` for replacing string literals/constants globally — handles fingerprint creation, matching, and reverse-index iteration in one call.
+- README: `sync_version.py` only updates patch version, NOT the Edge app version table. Run `python3 .github/scripts/generate_patches_readme.py quantavil/edge-morphe-patches main` after `generatePatchesList` to update README supported versions.
 - Patches: Crash Reporting and First-Run Experience (FRE) patches were excluded because their targets/classes (`Lerh`, `Lkrh`) and internal methods are obfuscated, which violates the no-obfuscation project rule.
 
 ## Blunders
@@ -65,3 +66,5 @@ Edge Morphe Patches is a repository containing Android application patches (Disa
 - [2026-06-05] Adding repo source to Morphe Manager failed with source URL error → Missing `dev` branch on remote repository when pre-release was toggled, and prefix 'v' mismatch on `patches-list.json` → Pushed `dev` branch to remote and removed 'v' from version in `patches-list.json`.
 - [2026-06-05] Morphe Manager displayed 'metadata N/A' for remote source → Suffix 'Z' on `created_at` timestamp in `patches-bundle.json` broke Android parser → Removed 'Z' suffix to match the local date-time format.
 - [2026-06-05] GPLv3 Section 7c violation in `patches/build.gradle.kts` → About block used upstream Morphe identity → Updated about block to use developer's own values.
+- [2026-06-11] `generatePatchesList` re-adds 'v' prefix to version in `patches-list.json` → Must manually strip it after each regeneration.
+- [2026-06-11] Gradle incremental build didn't pick up `EdgeCompatibility.kt` change → Cached `.mpp` still had old version targets → Must `./gradlew clean buildAndroid` when changing compatibility.
