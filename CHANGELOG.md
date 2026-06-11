@@ -1,3 +1,11 @@
+# [1.32.0](https://github.com/quantavil/edge-morphe-patches/compare/v1.31.0...v1.32.0) (2026-06-11)
+
+
+### Features
+
+* remove dev branch and pre-release config ([76358f6](https://github.com/quantavil/edge-morphe-patches/commit/76358f6f2f42898a6caf0dd936c8d6a099ef385d))
+* upgrade Edge base APK to v149.0.4022.53 and refactor telemetry patch ([f0ccbe9](https://github.com/quantavil/edge-morphe-patches/commit/f0ccbe94d12742f606f4b871d33665e70151b87c))
+
 # [1.31.0](https://github.com/quantavil/edge-morphe-patches/compare/v1.30.1...v1.31.0) (2026-06-06)
 
 
