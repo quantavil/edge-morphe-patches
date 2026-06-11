@@ -54,7 +54,7 @@ Edge Morphe Patches is a repository containing Android application patches (Disa
 - Copilot: Feature flag class found via `"msEdgeMobileCopilotMode"` string. All `()Z` methods are feature flags.
 - One-Click Deployment: `run_pipeline.sh` builds patches, purges the `morphe-data/tmp` cache, runs patcher, signs the APK, and deploys it to the ADB connected device.
 - Changing Base APK / Future Verification: When upgrading `edge_base.apk`, if version compatibility check fails, use `./run_pipeline.sh -f` to bypass, or add the new version to the `Compatibility` configuration in the patch classes source code.
-- Branching: Morphe Manager's "Use pre-release patches" setting fetches patches from the `dev` branch. Keeping a `dev` branch synced to origin prevents 404 download errors.
+- Branching: The dev branch has been removed; only the main branch is used, and pre-releases are not supported.
 - Fingerprints: Prefer `filters = listOf(string(...))` over `strings = listOf(...)` per Morphe docs convention.
 - Fingerprints: Use `matchAllMethodIndicesForEach` from `app.morphe.util` for replacing string literals/constants globally — handles fingerprint creation, matching, and reverse-index iteration in one call.
 - README: `sync_version.py` only updates patch version, NOT the Edge app version table. Run `python3 .github/scripts/generate_patches_readme.py quantavil/edge-morphe-patches main` after `generatePatchesList` to update README supported versions.
@@ -68,3 +68,5 @@ Edge Morphe Patches is a repository containing Android application patches (Disa
 - [2026-06-05] GPLv3 Section 7c violation in `patches/build.gradle.kts` → About block used upstream Morphe identity → Updated about block to use developer's own values.
 - [2026-06-11] `generatePatchesList` re-adds 'v' prefix to version in `patches-list.json` → Must manually strip it after each regeneration.
 - [2026-06-11] Gradle incremental build didn't pick up `EdgeCompatibility.kt` change → Cached `.mpp` still had old version targets → Must `./gradlew clean buildAndroid` when changing compatibility.
+- [2026-06-11] Manually pushing the release tag prior to CI run causes semantic-release to fail/skip because the tag already exists → Never tag releases manually when using semantic-release.
+
