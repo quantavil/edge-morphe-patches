@@ -59,6 +59,7 @@ Edge Morphe Patches is a repository containing Android application patches (Disa
 - Fingerprints: Use `matchAllMethodIndicesForEach` from `app.morphe.util` for replacing string literals/constants globally — handles fingerprint creation, matching, and reverse-index iteration in one call.
 - README: `sync_version.py` only updates patch version, NOT the Edge app version table. Run `python3 .github/scripts/generate_patches_readme.py quantavil/edge-morphe-patches main` after `generatePatchesList` to update README supported versions.
 - Patches: Crash Reporting and First-Run Experience (FRE) patches were excluded because their targets/classes (`Lerh`, `Lkrh`) and internal methods are obfuscated, which violates the no-obfuscation project rule.
+- Extensions: Sideloading is impossible on the stable APK because the handler code for com.microsoft.edge.extensions.ACTION_INSTALL_EXTENSION_FOR_DEV_MODE that processes EXTENSION_CRX was completely compiled out/stripped by Proguard/R8 optimization in the production release.
 
 ## Blunders
 - [2026-06-05] morphe-cli patch failed due to modified base APK → `morphe-data/tmp/` was dirty from prior runs → Purged `morphe-data/tmp/*` before patching.

@@ -6,11 +6,11 @@ body:
   - type: markdown
     attributes:
       value: |
-        # Morphe Patches bug report
+        # Edge Morphe Patches bug report
 
         Before creating a new bug report, please keep the following in mind:
 
-        - **Do not submit a duplicate bug report**: Search for existing bug reports [here](https://github.com/MorpheApp/morphe-patches/issues?q=is%3Aissue).
+        - **Do not submit a duplicate bug report**: Search for existing bug reports [here](https://github.com/quantavil/edge-morphe-patches/issues?q=is%3Aissue).
   - type: textarea
     attributes:
       label: Bug description
