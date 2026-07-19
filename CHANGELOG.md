@@ -1,3 +1,15 @@
+# [1.33.0](https://github.com/quantavil/edge-morphe-patches/compare/v1.32.0...v1.33.0) (2026-07-19)
+
+
+### Bug Fixes
+
+* repair dependabot target, guard bodyless log methods, drop dead code ([806dc48](https://github.com/quantavil/edge-morphe-patches/commit/806dc489faf3f1f87c1d26abd3b47b451086c863))
+
+
+### Features
+
+* upgrade Edge base APK to v150.0.4078.81 ([3ffa09f](https://github.com/quantavil/edge-morphe-patches/commit/3ffa09f44301d84cc83a7c817dc34856880712b2))
+
 # [1.32.0](https://github.com/quantavil/edge-morphe-patches/compare/v1.31.0...v1.32.0) (2026-06-11)
 
 
