@@ -46,11 +46,11 @@ Edge Morphe Patches is a repository containing Android application patches (Disa
 
 ## Critical Information
 - Any derivative patch set must not use the name "Morphe" as per the Section 7 terms of GPLv3 license.
-- Base APK: `edge_base.apk` in project root (Edge 149.0.4022.53, com.microsoft.emmx, arm64-v8a).
+- Base APK: `edge_base.apk` in project root (Edge 150.0.4078.81, com.microsoft.emmx, arm64-v8a).
 
 ## Insights
 - Telemetry: OneDS Logger at `Lcom/microsoft/applications/events/Logger;` — short-circuit all `log*()V` methods.
-- Telemetry: Endpoints `mobile.events.data.microsoft.com/OneCollector/1.0/` and `vortex.data.microsoft.com`.
+- Telemetry: Endpoints `mobile.events.data.microsoft.com/OneCollector/1.0/` (present) and `vortex.data.microsoft.com` (removed by Microsoft as of Edge 150.0.4078.81; patch keeps it as a harmless defensive match via `requireMatches = false`).
 - Copilot: Feature flag class found via `"msEdgeMobileCopilotMode"` string. All `()Z` methods are feature flags.
 - One-Click Deployment: `run_pipeline.sh` builds patches, purges the `morphe-data/tmp` cache, runs patcher, signs the APK, and deploys it to the ADB connected device.
 - Changing Base APK / Future Verification: When upgrading `edge_base.apk`, if version compatibility check fails, use `./run_pipeline.sh -f` to bypass, or add the new version to the `Compatibility` configuration in the patch classes source code.

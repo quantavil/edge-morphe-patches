@@ -16,13 +16,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "148.0.3967.97",
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            },
-            {
-              "version": "149.0.4022.53",
+              "version": "150.0.4078.81",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -47,13 +41,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "148.0.3967.97",
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            },
-            {
-              "version": "149.0.4022.53",
+              "version": "150.0.4078.81",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -78,13 +66,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "148.0.3967.97",
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            },
-            {
-              "version": "149.0.4022.53",
+              "version": "150.0.4078.81",
               "isExperimental": false,
               "minSdk": null,
               "description": null
