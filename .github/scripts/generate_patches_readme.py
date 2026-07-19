@@ -37,9 +37,7 @@ with open(json_path) as f:
     data = json.load(f)
 
 
-def pkg_emoji(pkg):
-    """Return a standard package emoji regardless of the package name."""
-    return "📦"
+PKG_EMOJI = "📦"
 
 # Group patches by package; patches with no compatiblePackages are universal.
 # JSON structure: compatiblePackages is a list of objects with
@@ -60,7 +58,7 @@ for patch in data["patches"]:
         if pkg not in by_pkg:
             by_pkg[pkg] = {
                 "name":    name,
-                "emoji":   pkg_emoji(pkg),
+                "emoji":   PKG_EMOJI,
                 "patches": {},
                 "targets": pkg_entry.get("targets", []),
             }

@@ -80,8 +80,13 @@ val telemetryEliminationPatch = bytecodePatch(
         var shortCircuitCount = 0
 
         loggerClass.methods.forEach { method ->
-            // Target methods that start with "log" and return void.
-            if (method.name.startsWith("log") && method.returnType == "V") {
+            // Target concrete methods that start with "log" and return void.
+            // Skip abstract/native methods — they have no instruction list, so
+            // returnEarly() would throw on them.
+            if (method.name.startsWith("log") &&
+                method.returnType == "V" &&
+                method.implementation != null
+            ) {
                 method.returnEarly()
                 shortCircuitCount++
             }
