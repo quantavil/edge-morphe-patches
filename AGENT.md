@@ -40,10 +40,9 @@ Repository containing Android application patches (Disable Play Store updates, T
 
 ## Critical Information
 - Derivative patch sets must not use the name "Morphe" (GPLv3 Section 7c).
-- Base APK: `edge_base.apk` in project root (Edge 151.0.4129.70, `com.microsoft.emmx`, `arm64-v8a`).
-- Unpatched Base APK naming: `edge_base.apk` (root) / `com.microsoft.emmx_<version>-<build>_minAPI29(arm64-v8a)(nodpi)_apkmirror.com.apk`.
-- Patched APK local output: `edge_patched.apk`.
-- GitHub Release APK asset naming: `edge-morphe-patched_v<patch_version>_emmx-<edge_version>_arm64-v8a.apk`.
+- 2-File System Convention:
+  1. Unpatched Base APK: `edge_base.apk` (Source base APK in root).
+  2. Patched Output APK (Local & GitHub identical): `edge-patched-<edge_version>-arm64.apk`. No redundant intermediate APK names.
 
 ## Insights
 - Telemetry: OneDS Logger (`Lcom/microsoft/applications/events/Logger;`) and Adjust SDK (`Lcom/adjust/sdk/Adjust;`) methods short-circuited; endpoints (OneCollector, Vortex, AppCenter, Adjust) redirected to `127.0.0.1`.

@@ -79,6 +79,9 @@ if [ -n "$DEVICE_SERIAL" ]; then
     adb -s "$DEVICE_SERIAL" uninstall com.microsoft.emmx.beta || true
 fi
 
+EDGE_VERSION=$(grep -oP 'version\s*=\s*"\K[0-9.]+' patches/src/main/kotlin/app/morphe/patches/all/misc/EdgeCompatibility.kt || echo "151.0.4129.70")
+OUTPUT_APK="edge-patched-${EDGE_VERSION}-arm64.apk"
+
 # Enable error handling specific to patching
 set +e
 java -jar morphe-cli.jar patch \
@@ -89,7 +92,7 @@ java -jar morphe-cli.jar patch \
     -e "Copilot feature toggle" \
     -e "Disable news notifications" \
     --patches="$MPP_FILE" \
-    -o edge_patched.apk \
+    -o "$OUTPUT_APK" \
     edge_base.apk
 PATCH_EXIT_CODE=$?
 set -e
@@ -122,8 +125,9 @@ if [ -n "$DEVICE_SERIAL" ]; then
     adb shell monkey -p "$PACKAGE_NAME" -c android.intent.category.LAUNCHER 1 > /dev/null 2>&1
 
     echo -e "${GREEN}🎉 Done! Edge has been launched on your device.${NC}"
+    echo -e "${GREEN}📁 Patched APK: $(pwd)/$OUTPUT_APK${NC}"
 else
     echo -e "\n${YELLOW}[5/5] Skipping launch step (no device connected).${NC}"
-    echo -e "${GREEN}🎉 Done! The patched APK is available at: $(pwd)/edge_patched.apk${NC}"
+    echo -e "${GREEN}🎉 Done! The patched APK is available at: $(pwd)/$OUTPUT_APK${NC}"
 fi
 echo -e "${BLUE}==================================================${NC}"
