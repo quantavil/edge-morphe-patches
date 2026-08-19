@@ -28,13 +28,13 @@
 | 151.0.4129.70 |
 | :---: |
 
-| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
-|----------|----------------|-----------|
-| [Change package name](#change-package-name) | Changes the application package name in AndroidManifest.xml (e.g. for media display whitelist compatibility or cloning). | • Package name |
-| [Copilot feature toggle](#copilot-feature-toggle) | Disables all Copilot and Bing Chat feature flags by forcing boolean feature evaluation methods to return false. |  |
-| [Disable Play Store updates](#disable-play-store-updates) | Disables Play Store updates by setting the version code to the maximum allowed. This patch does not work if the app is installed by mounting and may cause unexpected issues with some apps. |  |
-| [Disable news notifications](#disable-news-notifications) | Disables Bing news and weather push notifications by short-circuiting device push token registration and notification dispatch services. |  |
-| [Telemetry elimination](#telemetry-elimination) | Eliminates Microsoft Edge telemetry and tracking by redirecting data collection endpoints (OneCollector, AppCenter, Adjust) to localhost and short-circuiting OneDS and Adjust tracking methods. |  |
+| 💊&nbsp;Patch | 📜&nbsp;Description |
+|----------|----------------|
+| [Copilot feature toggle](#copilot-feature-toggle) | Disables all Copilot and Bing Chat feature flags by forcing boolean feature evaluation methods to return false. |
+| [Disable news notifications](#disable-news-notifications) | Disables Bing news and weather push notifications by short-circuiting device push token registration and notification dispatch services. |
+| [Telemetry elimination](#telemetry-elimination) | Eliminates Microsoft Edge telemetry and tracking by redirecting data collection endpoints (OneCollector, AppCenter, Adjust) to localhost and short-circuiting OneDS and Adjust tracking methods. |
+| [Change package name](#change-package-name) *(optional)* | Changes the application package name in AndroidManifest.xml (e.g. for media display whitelist compatibility or cloning). |
+| [Disable Play Store updates](#disable-play-store-updates) *(optional)* | Disables Play Store updates by setting the version code to the maximum allowed. This patch does not work if the app is installed by mounting and may cause unexpected issues with some apps. |
 
 </details>
 

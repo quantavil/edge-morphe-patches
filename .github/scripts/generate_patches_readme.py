@@ -73,29 +73,24 @@ def anchor(name):
 
 
 def patches_table(patches):
-    """Render a sorted markdown table of patches with name, description, and options."""
-    has_options = any(p.get("options") for p in patches)
-    if has_options:
-        rows = [
-            "| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |",
-            "|----------|----------------|-----------|",
-        ]
-    else:
-        rows = [
-            "| 💊&nbsp;Patch | 📜&nbsp;Description |",
-            "|----------|----------------|",
-        ]
-    for p in sorted(patches, key=lambda x: x["name"]):
+    """Render a markdown table of patches with name and description.
+    Default/important patches appear first, optional patches appear last.
+    """
+    rows = [
+        "| 💊&nbsp;Patch | 📜&nbsp;Description |",
+        "|----------|----------------|",
+    ]
+    # Sort: default=True first, default=False last, then alphabetical by name
+    sorted_patches = sorted(patches, key=lambda x: (not x.get("default", False), x["name"]))
+    for p in sorted_patches:
         a = anchor(p["name"])
         desc = (p.get("description") or "").replace("\n", "<br>")
-        if has_options:
-            options = p.get("options") or []
-            # Show only option titles as a bullet list
-            parts = [opt.get("title") or opt.get("key") or "" for opt in options]
-            opts_cell = "<br>".join(f"• {t}" for t in parts)
-            rows.append(f"| [{p['name']}](#{a}) | {desc} | {opts_cell} |")
+        name = p["name"]
+        if not p.get("default", False):
+            name_display = f"[{name}](#{a}) *(optional)*"
         else:
-            rows.append(f"| [{p['name']}](#{a}) | {desc} |")
+            name_display = f"[{name}](#{a})"
+        rows.append(f"| {name_display} | {desc} |")
     return "\n".join(rows)
 
 
