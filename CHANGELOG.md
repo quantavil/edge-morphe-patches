@@ -1,3 +1,15 @@
+# [1.34.0](https://github.com/quantavil/edge-morphe-patches/compare/v1.33.0...v1.34.0) (2026-08-19)
+
+
+### Features
+
+* upgrade Edge base to v151.0.4129.70, harden telemetry, add news notification patch ([38d36ff](https://github.com/quantavil/edge-morphe-patches/commit/38d36ff81a57ad2590e3023baec1cac2d3b8788e))
+
+
+### Reverts
+
+* downgrade conventional-changelog-conventionalcommits to 9.3.1 ([3160211](https://github.com/quantavil/edge-morphe-patches/commit/31602115fb6169d5e71d7095c65b8bb73af5b9f0))
+
 # [1.33.0](https://github.com/quantavil/edge-morphe-patches/compare/v1.32.0...v1.33.0) (2026-07-19)
 
 
