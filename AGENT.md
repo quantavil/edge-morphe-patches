@@ -22,6 +22,7 @@ Repository containing Android application patches (Disable Play Store updates, T
         ├── EdgeCompatibility.kt  # Shared Compatibility constant for com.microsoft.emmx
         ├── copilot/              # Copilot/Bing Chat feature toggle patch
         ├── notifications/        # Disable news & weather push notifications patch
+        ├── packagename/          # Change package name resource patch (configurable string option)
         ├── telemetry/            # Telemetry & tracking elimination patch (OneDS, Adjust, AppCenter)
         └── updates/              # Disable Play Store updates patch
 

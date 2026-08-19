@@ -2,6 +2,41 @@
   "version": "1.34.0",
   "patches": [
     {
+      "name": "Change package name",
+      "description": "Changes the application package name in AndroidManifest.xml (e.g. for media display whitelist compatibility or cloning).",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.microsoft.emmx",
+          "name": "Microsoft Edge",
+          "description": null,
+          "apkFileType": null,
+          "appIconColor": null,
+          "signatures": null,
+          "targets": [
+            {
+              "version": "151.0.4129.70",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "key": "packageName",
+          "title": "Package name",
+          "description": "New package name for Microsoft Edge (e.g. com.microsoft.emmx.morphe or a custom package name)",
+          "required": false,
+          "type": "kotlin.String",
+          "default": "com.microsoft.emmx.morphe",
+          "values": null
+        }
+      ]
+    },
+    {
       "name": "Copilot feature toggle",
       "description": "Disables all Copilot and Bing Chat feature flags by forcing boolean feature evaluation methods to return false.",
       "default": true,
