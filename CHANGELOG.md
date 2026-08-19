@@ -1,3 +1,10 @@
+# [1.35.0](https://github.com/quantavil/edge-morphe-patches/compare/v1.34.0...v1.35.0) (2026-08-19)
+
+
+### Features
+
+* add Change package name patch with configurable target package ([108b812](https://github.com/quantavil/edge-morphe-patches/commit/108b812d1e42f0956660fe6edb5e3c5cb25895cf))
+
 # [1.34.0](https://github.com/quantavil/edge-morphe-patches/compare/v1.33.0...v1.34.0) (2026-08-19)
 
 

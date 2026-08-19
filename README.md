@@ -18,7 +18,7 @@
 
 &nbsp;
 ## 🩹 Patches<!-- PATCHES_START -->
-> **[v1.34.0](https://github.com/quantavil/edge-morphe-patches/releases/tag/v1.34.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;5 patches total
+> **[v1.35.0](https://github.com/quantavil/edge-morphe-patches/releases/tag/v1.35.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;5 patches total
 <details open>
 <summary>📦 Microsoft Edge&nbsp;&nbsp;•&nbsp;&nbsp;5 patches</summary>
 <br>
