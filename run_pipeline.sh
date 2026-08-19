@@ -87,6 +87,7 @@ java -jar morphe-cli.jar patch \
     -e "Disable Play Store updates" \
     -e "Telemetry elimination" \
     -e "Copilot feature toggle" \
+    -e "Disable news notifications" \
     --patches="$MPP_FILE" \
     -o edge_patched.apk \
     edge_base.apk
