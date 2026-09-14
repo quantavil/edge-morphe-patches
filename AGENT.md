@@ -67,4 +67,5 @@ Repository containing Android application patches (Disable Play Store updates, T
 - [2026-08-19] Android ART VerifyError when short-circuiting Adjust methods → `returnEarly()` on `<init>()` omitted `super.<init>()` → Skip `<init>` and `<clinit>` methods when short-circuiting entire classes.
 - [2026-09-14] ChangePackageNamePatch hardcoded `oldPackage = "com.microsoft.emmx"` → Broke Edge Canary `com.microsoft.emmx.canary` renaming → Read package dynamically from AndroidManifest.xml.
 - [2026-09-14] `run_pipeline.sh` unhandled multi-target grep → Grepped multiple versions into `OUTPUT_APK` newline string → Filtered with `head -n 1`.
+- [2026-09-14] Edge Canary `GcStateAssertQueue` crash on short-circuiting JNI callback → `returnEarly()` on `requestDeviceToken` left `JniOnceCallback` unexecuted, triggering `LifetimeAssertException` on GC in Canary → Invoke callback with empty string before returning.
 

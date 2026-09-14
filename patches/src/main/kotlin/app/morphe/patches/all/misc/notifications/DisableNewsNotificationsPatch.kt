@@ -1,5 +1,6 @@
 package app.morphe.patches.all.misc.notifications
 
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patches.all.misc.EDGE_CANARY_COMPATIBILITY
@@ -32,7 +33,27 @@ val disableNewsNotificationsPatch = bytecodePatch(
             serviceClass.methods.forEach { method ->
                 if (method.implementation != null) {
                     when (method.name) {
-                        "requestDeviceToken", "onMessageReceived" -> {
+                        "requestDeviceToken" -> {
+                            if (method.returnType == "V") {
+                                // Chromium JniOnceCallback / JniCallbackImpl enforces LifetimeAssert cleanup.
+                                // Calling returnEarly() leaves the native callback unresolved, which triggers
+                                // a fatal LifetimeAssertException in Canary builds when garbage collected.
+                                // Instead, invoke the callback with an empty token before returning.
+                                method.addInstructions(
+                                    0,
+                                    """
+                                        if-eqz p0, :cond_skip
+                                        const-string v0, ""
+                                        invoke-interface {p0, v0}, Lorg/chromium/base/Callback;->onResult(Ljava/lang/Object;)V
+                                        :cond_skip
+                                        return-void
+                                    """.trimIndent()
+                                )
+                                servicePatched = true
+                                logger.info("  Short-circuited BingNotificationService.requestDeviceToken() with empty token callback")
+                            }
+                        }
+                        "onMessageReceived" -> {
                             if (method.returnType == "V") {
                                 method.returnEarly()
                                 servicePatched = true
