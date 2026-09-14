@@ -2,6 +2,7 @@ package app.morphe.patches.all.misc.packagename
 
 import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patcher.patch.stringOption
+import app.morphe.patches.all.misc.EDGE_CANARY_COMPATIBILITY
 import app.morphe.patches.all.misc.EDGE_COMPATIBILITY
 import app.morphe.util.getNode
 import org.w3c.dom.Element
@@ -15,23 +16,23 @@ val changePackageNamePatch = resourcePatch(
     description = "Changes the application package name in AndroidManifest.xml (e.g. for media display whitelist compatibility or cloning).",
     default = false,
 ) {
-    compatibleWith(EDGE_COMPATIBILITY)
+    compatibleWith(EDGE_COMPATIBILITY, EDGE_CANARY_COMPATIBILITY)
 
     val targetPackageName by stringOption(
         key = "packageName",
-        default = "com.microsoft.emmx.morphe",
+        default = null,
         title = "Package name",
-        description = "New package name for Microsoft Edge (e.g. com.microsoft.emmx.morphe or a custom package name)",
+        description = "New package name for Microsoft Edge (defaults to <originalPackage>.morphe if not specified)",
     )
 
     execute {
-        val newPackage = targetPackageName ?: "com.microsoft.emmx.morphe"
-        val oldPackage = "com.microsoft.emmx"
-
-        logger.info("Changing package name from '$oldPackage' to '$newPackage'...")
-
         document("AndroidManifest.xml").use { document ->
             val manifest = document.getNode("manifest") as Element
+            val oldPackage = manifest.getAttribute("package")
+            val newPackage = targetPackageName ?: "$oldPackage.morphe"
+
+            logger.info("Changing package name from '$oldPackage' to '$newPackage'...")
+
             manifest.setAttribute("package", newPackage)
 
             val allElements = document.getElementsByTagName("*")
@@ -46,8 +47,8 @@ val changePackageNamePatch = resourcePatch(
                     }
                 }
             }
-        }
 
-        logger.info("Successfully rewritten AndroidManifest.xml package references to '$newPackage'")
+            logger.info("Successfully rewritten AndroidManifest.xml package references to '$newPackage'")
+        }
     }
 }

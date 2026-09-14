@@ -4,6 +4,7 @@ import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.string
+import app.morphe.patches.all.misc.EDGE_CANARY_COMPATIBILITY
 import app.morphe.patches.all.misc.EDGE_COMPATIBILITY
 import app.morphe.util.returnEarly
 import java.util.logging.Logger
@@ -28,7 +29,7 @@ val copilotFeatureTogglePatch = bytecodePatch(
             "boolean feature evaluation methods to return false.",
     default = true,
 ) {
-    compatibleWith(EDGE_COMPATIBILITY)
+    compatibleWith(EDGE_COMPATIBILITY, EDGE_CANARY_COMPATIBILITY)
 
     execute {
         // Resolve the fingerprint to find the target class containing Copilot feature flags.

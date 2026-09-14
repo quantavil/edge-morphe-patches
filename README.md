@@ -18,14 +18,33 @@
 
 &nbsp;
 ## 🩹 Patches<!-- PATCHES_START -->
-> **[v1.35.0](https://github.com/quantavil/edge-morphe-patches/releases/tag/v1.35.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;5 patches total
+> **[v1.35.0](https://github.com/quantavil/edge-morphe-patches/releases/tag/v1.35.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;10 patches total
 <details open>
 <summary>📦 Microsoft Edge&nbsp;&nbsp;•&nbsp;&nbsp;5 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 151.0.4129.70 |
+| 152.0.4191.65 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description |
+|----------|----------------|
+| [Copilot feature toggle](#copilot-feature-toggle) | Disables all Copilot and Bing Chat feature flags by forcing boolean feature evaluation methods to return false. |
+| [Disable news notifications](#disable-news-notifications) | Disables Bing news and weather push notifications by short-circuiting device push token registration and notification dispatch services. |
+| [Telemetry elimination](#telemetry-elimination) | Eliminates Microsoft Edge telemetry and tracking by redirecting data collection endpoints (OneCollector, AppCenter, Adjust) to localhost and short-circuiting OneDS and Adjust tracking methods. |
+| [Change package name](#change-package-name) *(optional)* | Changes the application package name in AndroidManifest.xml (e.g. for media display whitelist compatibility or cloning). |
+| [Disable Play Store updates](#disable-play-store-updates) *(optional)* | Disables Play Store updates by setting the version code to the maximum allowed. This patch does not work if the app is installed by mounting and may cause unexpected issues with some apps. |
+
+</details>
+
+<details open>
+<summary>📦 Microsoft Edge Canary&nbsp;&nbsp;•&nbsp;&nbsp;5 patches</summary>
+<br>
+
+**🎯 Supported versions:**
+
+| 155.0.4269.0 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description |

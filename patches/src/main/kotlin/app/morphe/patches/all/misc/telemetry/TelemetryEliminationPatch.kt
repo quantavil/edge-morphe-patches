@@ -5,6 +5,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.string
+import app.morphe.patches.all.misc.EDGE_CANARY_COMPATIBILITY
 import app.morphe.patches.all.misc.EDGE_COMPATIBILITY
 import app.morphe.util.matchAllMethodIndicesForEach
 import app.morphe.util.returnEarly
@@ -54,7 +55,7 @@ val telemetryEliminationPatch = bytecodePatch(
             "(OneCollector, AppCenter, Adjust) to localhost and short-circuiting OneDS and Adjust tracking methods.",
     default = true,
 ) {
-    compatibleWith(EDGE_COMPATIBILITY)
+    compatibleWith(EDGE_COMPATIBILITY, EDGE_CANARY_COMPATIBILITY)
 
     execute {
         // ──────────────────────────────────────────────────────────────────────

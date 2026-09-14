@@ -77,9 +77,10 @@ if [ -n "$DEVICE_SERIAL" ]; then
     echo -e "${YELLOW}🗑️ Uninstalling previous Edge packages to prevent signature conflicts...${NC}"
     adb -s "$DEVICE_SERIAL" uninstall com.microsoft.emmx || true
     adb -s "$DEVICE_SERIAL" uninstall com.microsoft.emmx.beta || true
+    adb -s "$DEVICE_SERIAL" uninstall com.microsoft.emmx.canary || true
 fi
 
-EDGE_VERSION=$(grep -oP 'version\s*=\s*"\K[0-9.]+' patches/src/main/kotlin/app/morphe/patches/all/misc/EdgeCompatibility.kt || echo "151.0.4129.70")
+EDGE_VERSION=$(grep -oP 'version\s*=\s*"\K[0-9.]+' patches/src/main/kotlin/app/morphe/patches/all/misc/EdgeCompatibility.kt | head -n 1 || echo "152.0.4191.65")
 OUTPUT_APK="edge-patched-${EDGE_VERSION}-arm64.apk"
 
 # Enable error handling specific to patching
@@ -112,10 +113,12 @@ echo -e "${GREEN}✅ Patching completed successfully!${NC}"
 # 5. Launch the application on the device (if connected)
 if [ -n "$DEVICE_SERIAL" ]; then
     echo -e "\n${YELLOW}[5/5] Launching the patched application...${NC}"
-    # Since package name is not changed, it is com.microsoft.emmx or com.microsoft.emmx.beta
-    ALL_PACKAGES=$(adb shell pm list packages | grep -oE "com\.microsoft\.emmx(\.beta)?" || true)
+    # Since package name is not changed, it is com.microsoft.emmx, com.microsoft.emmx.beta, or com.microsoft.emmx.canary
+    ALL_PACKAGES=$(adb shell pm list packages | grep -oE "com\.microsoft\.emmx(\.beta|\.canary)?" || true)
     
-    if echo "$ALL_PACKAGES" | grep -q "com.microsoft.emmx.beta"; then
+    if echo "$ALL_PACKAGES" | grep -q "com.microsoft.emmx.canary"; then
+        PACKAGE_NAME="com.microsoft.emmx.canary"
+    elif echo "$ALL_PACKAGES" | grep -q "com.microsoft.emmx.beta"; then
         PACKAGE_NAME="com.microsoft.emmx.beta"
     else
         PACKAGE_NAME="com.microsoft.emmx"

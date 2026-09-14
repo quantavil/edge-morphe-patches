@@ -2,6 +2,7 @@ package app.morphe.patches.all.misc.notifications
 
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patches.all.misc.EDGE_CANARY_COMPATIBILITY
 import app.morphe.patches.all.misc.EDGE_COMPATIBILITY
 import app.morphe.util.returnEarly
 import java.util.logging.Logger
@@ -21,7 +22,7 @@ val disableNewsNotificationsPatch = bytecodePatch(
             "device push token registration and notification dispatch services.",
     default = true,
 ) {
-    compatibleWith(EDGE_COMPATIBILITY)
+    compatibleWith(EDGE_COMPATIBILITY, EDGE_CANARY_COMPATIBILITY)
 
     execute {
         var servicePatched = false

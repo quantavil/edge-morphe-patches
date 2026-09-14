@@ -32,7 +32,7 @@ Repository containing Android application patches (Disable Play Store updates, T
 - Use `mutableClassDefByOrNull(classDescriptor)` directly in `execute {}` to patch non-obfuscated SDK classes.
 - Fingerprints use `Fingerprint(filters = listOf(string(...)))` for string-based matching.
 - Fingerprint `.classDef` and `.method` properties return mutable instances directly.
-- Every patch must call `compatibleWith(EDGE_COMPATIBILITY)` to declare package compatibility.
+- Every patch must call `compatibleWith(EDGE_COMPATIBILITY, EDGE_CANARY_COMPATIBILITY)` to declare package compatibility.
 
 ## Dependencies & Setup
 - JDK 17+ and Gradle (wrapper `gradlew`).
@@ -42,7 +42,7 @@ Repository containing Android application patches (Disable Play Store updates, T
 ## Critical Information
 - Derivative patch sets must not use the name "Morphe" (GPLv3 Section 7c).
 - 2-File System Convention:
-  1. Unpatched Base APK: `edge_base.apk` (Source base APK in root).
+  1. Unpatched Base APK: `edge_base.apk` (Source base APK in root, Edge 152.0.4191.65 or Canary 155.0.4269.0).
   2. Patched Output APK (Local & GitHub identical): `edge-patched-<edge_version>-arm64.apk`. No redundant intermediate APK names.
 
 ## Insights
@@ -65,3 +65,6 @@ Repository containing Android application patches (Disable Play Store updates, T
 - [2026-06-11] Incremental build didn't pick up `EdgeCompatibility.kt` change → Cached `.mpp` retained old version → Must `./gradlew clean buildAndroid` on compatibility changes.
 - [2026-06-11] Manual release tagging caused semantic-release CI failure → Tag already existed on remote → Never tag releases manually.
 - [2026-08-19] Android ART VerifyError when short-circuiting Adjust methods → `returnEarly()` on `<init>()` omitted `super.<init>()` → Skip `<init>` and `<clinit>` methods when short-circuiting entire classes.
+- [2026-09-14] ChangePackageNamePatch hardcoded `oldPackage = "com.microsoft.emmx"` → Broke Edge Canary `com.microsoft.emmx.canary` renaming → Read package dynamically from AndroidManifest.xml.
+- [2026-09-14] `run_pipeline.sh` unhandled multi-target grep → Grepped multiple versions into `OUTPUT_APK` newline string → Filtered with `head -n 1`.
+
