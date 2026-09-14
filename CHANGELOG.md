@@ -1,3 +1,10 @@
+# [1.36.0](https://github.com/quantavil/edge-morphe-patches/compare/v1.35.0...v1.36.0) (2026-09-14)
+
+
+### Features
+
+* add Edge Canary support, upgrade Edge to v152.0.4191.65 and Canary to v155.0.4269.0 ([1287b13](https://github.com/quantavil/edge-morphe-patches/commit/1287b13287811dfb1c06ac6745f07374cc5059ae))
+
 # [1.35.0](https://github.com/quantavil/edge-morphe-patches/compare/v1.34.0...v1.35.0) (2026-08-19)
 
 
