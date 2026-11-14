@@ -1,3 +1,10 @@
+## [1.37.1](https://github.com/quantavil/edge-morphe-patches/compare/v1.37.0...v1.37.1) (2026-11-14)
+
+
+### Bug Fixes
+
+* correct Copilot fingerprint, telemetry guard, and package rename ([b54f01d](https://github.com/quantavil/edge-morphe-patches/commit/b54f01d538cbfc71b5100f1020790062f0755f2c))
+
 # [1.37.0](https://github.com/quantavil/edge-morphe-patches/compare/v1.36.1...v1.37.0) (2026-11-14)
 
 
