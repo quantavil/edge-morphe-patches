@@ -42,7 +42,7 @@ Repository containing Android application patches (Disable Play Store updates, T
   - `../morphe-patcher` (tag `v2.3.0`)
   - `../morphe-patches-library` (tag `v2.2.0-dev.6`)
 - `ANDROID_HOME=~/Android/Sdk` is required when building the composite library (its signature extension uses AGP).
-- CLI jar: `morphe-cli.jar` is the Morphe Desktop `v2.1.0` all-jar (embeds Patcher 2.3.0). It is gitignored; download it from the `morphe-cli` releases.
+- CLI jar: `morphe-cli.jar` is the Morphe Desktop `v2.1.1` all-jar (embeds Patcher 2.3.0). It is gitignored; download it from the `morphe-cli` releases.
 
 ## Critical Information
 - Derivative patch sets must not use the name "Morphe" (GPLv3 Section 7c).
@@ -51,11 +51,11 @@ Repository containing Android application patches (Disable Play Store updates, T
   2. Patched Output APK (Local & GitHub identical): `edge-patched-<edge_version>-arm64.apk` or `edge-canary-patched-<edge_version>-arm64.apk`. No redundant intermediate APK names.
 
 ## Insights
-- Telemetry: OneDS Logger (`Lcom/microsoft/applications/events/Logger;`) and Adjust SDK (`Lcom/adjust/sdk/Adjust;`) methods short-circuited; endpoints (OneCollector, Vortex, AppCenter, Adjust) redirected to `127.0.0.1`.
+- Telemetry: OneDS Logger (`Lcom/microsoft/applications/events/Logger;`) and Adjust SDK (`Lcom/adjust/sdk/Adjust;`) methods short-circuited; endpoints (OneCollector, Vortex, AppCenter, Adjust) redirected to `127.0.0.1`. Canary 159 ships without OneDS `Logger` and OneCollector strings, so each component is optional and the patch only fails if nothing at all was patched.
 - News Notifications: Push token registration and message dispatch short-circuited at `BingNotificationService` and `BingNotificationReceiver`.
 - Promos: Default browser startup prompt and hub sign-in upsells disabled via feature flag strings.
 - NTP Feed: Background stream update and prefetch short-circuited at `FeedServiceBridge` and `FeedSurfaceRendererBridge`.
-- Copilot: Feature flag class located via `"msEdgeMobileCopilotMode"` string; all `()Z` methods return `false`.
+- Copilot: Feature flag class located via `"msEdgeMobileCopilotMode"` string; all `()Z` methods return `false`. The fingerprint must constrain `returnType = "Z"` and `parameters = emptyList()` because the same string also sits in unrelated `<clinit>` methods (`Ltie;` on 157, `Lzla;` on Canary 159).
 - Toolchain 2.x: the `app.morphe.patches` settings plugin (2.1.0) adds `morphe-patcher` and `smali` from the version catalog; `bytecodePatch()`/`resourcePatch()` still compile but are deprecated in Patcher 2.3.0 (new code should use `patch()`).
 - Deployment: `run_pipeline.sh` compiles patches, purges `morphe-data/tmp`, patches APK, signs, and deploys via ADB.
 - Upgrading APK: Update `EdgeCompatibility.kt` (replace the old `AppTarget`, do not keep older versions), run `./gradlew clean buildAndroid generatePatchesList`, and run `python3 .github/scripts/generate_patches_readme.py quantavil/edge-morphe-patches main`. `patches-list.json` no longer carries a 'v' prefix; do not re-add one.
@@ -77,4 +77,7 @@ Repository containing Android application patches (Disable Play Store updates, T
 - [2026-09-14] Edge Canary `GcStateAssertQueue` crash on short-circuiting JNI callback → `returnEarly()` on `requestDeviceToken` left `JniOnceCallback` unexecuted, triggering `LifetimeAssertException` on GC in Canary → Invoke callback with empty string before returning.
 - [2026-11-14] GitHub Packages returns 401 for the Morphe registry with a `gh auth token` (no `read:packages` scope) → Container builds fail on plugin/library resolution → Use the local composite builds (`../morphe-patches-gradle-plugin`, `../morphe-patcher`, `../morphe-patches-library`); CI's `GITHUB_TOKEN` still resolves the published artifacts.
 - [2026-11-14] Patcher 2.x CLI requires Java 21+ but the system default is Java 17 → `UnsupportedClassVersionError` → `run_pipeline.sh` auto-detects `/usr/lib/jvm/java-27-openjdk/bin/java`; pass `JAVA_BIN` to override.
+- [2026-11-14] CLI 2.1.0 threw `FileNotFoundException` in `ApkBundle.loadApkDirectory` for relative input paths on split bundles → Fixed upstream in 2.1.1 → `run_pipeline.sh` resolves the base APK, MPP, and output to absolute paths with `realpath`.
+- [2026-11-14] Copilot fingerprint matched unrelated `<clinit>` methods containing `msEdgeMobileCopilotMode` (`Ltie;` on 157, `Lzla;` on 159) → Patch aborted with "No Copilot feature flag methods found" → Restrict the fingerprint to `()Z` methods.
+- [2026-11-14] `ChangePackageNamePatch` rewrote the manifest `package` attribute twice because `getElementsByTagName("*")` includes the root element → `com.microsoft.emmx.morphe.morphe` → Skip the root `package` attribute in the replacement loop.
 

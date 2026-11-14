@@ -101,6 +101,7 @@ if [ -z "$MPP_FILE" ]; then
     echo -e "${RED}❌ Error: Could not find compiled .mpp patch file in patches/build/libs/${NC}"
     exit 1
 fi
+MPP_FILE=$(realpath "$MPP_FILE")
 echo -e "${GREEN}✅ Patches compiled successfully: $MPP_FILE${NC}"
 
 # 3. Clean cache/temporary files
@@ -124,6 +125,10 @@ if [ -z "$BASE_APK" ]; then
     exit 1
 fi
 
+# Morphe CLI 2.1.0 mis-resolves relative input paths when staging split APK bundles
+# (broken ApkBundle.loadApkDirectory). Pass absolute paths until the bundled CLI includes 2.1.1.
+BASE_APK=$(realpath "$BASE_APK")
+
 echo -e "\n${YELLOW}[4/5] Patching $BASE_APK (Telemetry, Copilot, Play Store updates & news notifications)...${NC}"
 
 if [ -n "$DEVICE_SERIAL" ]; then
@@ -138,7 +143,7 @@ if [ -z "$EDGE_VERSION" ]; then
     echo -e "${RED}❌ Error: Could not read the target version from $COMPAT_FILE${NC}"
     exit 1
 fi
-OUTPUT_APK="${OUTPUT_PREFIX}-${EDGE_VERSION}-arm64.apk"
+OUTPUT_APK="$(realpath -m "$(pwd)/${OUTPUT_PREFIX}-${EDGE_VERSION}-arm64.apk")"
 
 # Enable error handling specific to patching
 set +e
@@ -186,9 +191,9 @@ if [ -n "$DEVICE_SERIAL" ]; then
     adb shell monkey -p "$PACKAGE_NAME" -c android.intent.category.LAUNCHER 1 > /dev/null 2>&1
 
     echo -e "${GREEN}🎉 Done! Edge has been launched on your device.${NC}"
-    echo -e "${GREEN}📁 Patched APK: $(pwd)/$OUTPUT_APK${NC}"
+    echo -e "${GREEN}📁 Patched APK: $OUTPUT_APK${NC}"
 else
     echo -e "\n${YELLOW}[5/5] Skipping launch step (no device connected).${NC}"
-    echo -e "${GREEN}🎉 Done! The patched APK is available at: $(pwd)/$OUTPUT_APK${NC}"
+    echo -e "${GREEN}🎉 Done! The patched APK is available at: $OUTPUT_APK${NC}"
 fi
 echo -e "${BLUE}==================================================${NC}"

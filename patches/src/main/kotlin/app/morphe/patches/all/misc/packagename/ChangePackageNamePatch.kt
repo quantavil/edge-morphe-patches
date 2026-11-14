@@ -41,7 +41,11 @@ val changePackageNamePatch = resourcePatch(
                 val attributes = element.attributes
                 for (j in 0 until attributes.length) {
                     val attr = attributes.item(j)
-                    if (attr.nodeValue.contains(oldPackage)) {
+                    // The manifest package attribute was already rewritten above.
+                    // Including it here would replace the old package inside the new
+                    // value again (e.g. com.microsoft.emmx.morphe.morphe).
+                    if (element === manifest && attr.nodeName == "package") continue
+                    if (attr.nodeValue?.contains(oldPackage) == true) {
                         val newValue = attr.nodeValue.replace(oldPackage, newPackage)
                         attr.nodeValue = newValue
                     }

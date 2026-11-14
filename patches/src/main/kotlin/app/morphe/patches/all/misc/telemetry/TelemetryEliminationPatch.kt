@@ -144,14 +144,36 @@ val telemetryEliminationPatch = bytecodePatch(
             }
         }
 
+        // Canary builds can ship without the OneDS Logger (Edge 159 only keeps a handful of
+        // com.microsoft.applications.events classes and no Logger at all). Treat a missing
+        // component as "nothing to patch" as long as another telemetry component was handled,
+        // so the patch does not fail on builds where the SDK was removed.
         if (oneDsShortCircuitCount == 0) {
-            throw PatchException("No OneDS Logger methods found — Logger class may have changed")
+            logger.warning("OneDS Logger not found — skipping (SDK may be absent in this build)")
+        } else {
+            logger.info("Short-circuited $oneDsShortCircuitCount OneDS Logger method(s)")
         }
 
-        logger.info("Short-circuited $oneDsShortCircuitCount OneDS Logger method(s)")
-        logger.info("Short-circuited $adjustShortCircuitCount Adjust tracker method(s)")
-        if (appCenterShortCircuitCount > 0) {
+        if (adjustShortCircuitCount == 0) {
+            logger.warning("Adjust tracker class not found — skipping (SDK may be absent in this build)")
+        } else {
+            logger.info("Short-circuited $adjustShortCircuitCount Adjust tracker method(s)")
+        }
+
+        if (appCenterShortCircuitCount == 0) {
+            logger.info("AppCenter not present — skipping")
+        } else {
             logger.info("Short-circuited $appCenterShortCircuitCount AppCenter method(s)")
+        }
+
+        if (stringReplacementCount == 0 &&
+            oneDsShortCircuitCount == 0 &&
+            adjustShortCircuitCount == 0 &&
+            appCenterShortCircuitCount == 0
+        ) {
+            throw PatchException(
+                "No telemetry endpoints or tracking classes found — telemetry implementation may have changed"
+            )
         }
     }
 }
