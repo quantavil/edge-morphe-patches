@@ -35,15 +35,20 @@ Repository containing Android application patches (Disable Play Store updates, T
 - Every patch must call `compatibleWith(EDGE_COMPATIBILITY, EDGE_CANARY_COMPATIBILITY)` to declare package compatibility.
 
 ## Dependencies & Setup
-- JDK 17+ and Gradle (wrapper `gradlew`).
-- Local composite build: `../morphe-patches-library` must exist (cloned tag `v1.4.0-dev.5`).
-- Kotlin compiler flag: `-Xcontext-parameters` enabled in `patches/build.gradle.kts`.
+- JDK 17+ for Gradle; JDK 21+ for the Morphe CLI (`morphe-cli.jar`).
+- Toolchain: patches plugin `2.1.0`, Morphe Patcher `2.3.0`, patches library `2.2.0-dev.6`.
+- Local composite builds (no GitHub Packages token needed):
+  - `../morphe-patches-gradle-plugin` (tag `v2.1.0`, optionally auto-included by `settings.gradle.kts`)
+  - `../morphe-patcher` (tag `v2.3.0`)
+  - `../morphe-patches-library` (tag `v2.2.0-dev.6`)
+- `ANDROID_HOME=~/Android/Sdk` is required when building the composite library (its signature extension uses AGP).
+- CLI jar: `morphe-cli.jar` is the Morphe Desktop `v2.1.0` all-jar (embeds Patcher 2.3.0). It is gitignored; download it from the `morphe-cli` releases.
 
 ## Critical Information
 - Derivative patch sets must not use the name "Morphe" (GPLv3 Section 7c).
 - 2-File System Convention:
-  1. Unpatched Base APK: `edge_base.apk` (Source base APK in root, Edge 152.0.4191.65 or Canary 155.0.4269.0).
-  2. Patched Output APK (Local & GitHub identical): `edge-patched-<edge_version>-arm64.apk`. No redundant intermediate APK names.
+  1. Unpatched Base APK: `edge_base.apk`/`edge_base.apkm` (Edge 157.0.4341.53) or `edge_canary_base.apk` (Canary 159.0.4399.0), both gitignored in the root.
+  2. Patched Output APK (Local & GitHub identical): `edge-patched-<edge_version>-arm64.apk` or `edge-canary-patched-<edge_version>-arm64.apk`. No redundant intermediate APK names.
 
 ## Insights
 - Telemetry: OneDS Logger (`Lcom/microsoft/applications/events/Logger;`) and Adjust SDK (`Lcom/adjust/sdk/Adjust;`) methods short-circuited; endpoints (OneCollector, Vortex, AppCenter, Adjust) redirected to `127.0.0.1`.
@@ -51,8 +56,10 @@ Repository containing Android application patches (Disable Play Store updates, T
 - Promos: Default browser startup prompt and hub sign-in upsells disabled via feature flag strings.
 - NTP Feed: Background stream update and prefetch short-circuited at `FeedServiceBridge` and `FeedSurfaceRendererBridge`.
 - Copilot: Feature flag class located via `"msEdgeMobileCopilotMode"` string; all `()Z` methods return `false`.
+- Toolchain 2.x: the `app.morphe.patches` settings plugin (2.1.0) adds `morphe-patcher` and `smali` from the version catalog; `bytecodePatch()`/`resourcePatch()` still compile but are deprecated in Patcher 2.3.0 (new code should use `patch()`).
 - Deployment: `run_pipeline.sh` compiles patches, purges `morphe-data/tmp`, patches APK, signs, and deploys via ADB.
-- Upgrading APK: Update `EdgeCompatibility.kt`, run `./gradlew clean buildAndroid generatePatchesList`, strip 'v' in `patches-list.json`, and run `python3 .github/scripts/generate_patches_readme.py quantavil/edge-morphe-patches main`.
+- Upgrading APK: Update `EdgeCompatibility.kt` (replace the old `AppTarget`, do not keep older versions), run `./gradlew clean buildAndroid generatePatchesList`, and run `python3 .github/scripts/generate_patches_readme.py quantavil/edge-morphe-patches main`. `patches-list.json` no longer carries a 'v' prefix; do not re-add one.
+- CLI install/patch: `./run_pipeline.sh` (stable) or `./run_pipeline.sh --canary`; the script auto-selects a Java 21+ binary and supports `.apk`/`.apkm` bases.
 - Obfuscation rule: Avoid matching obfuscated classes (`Lerh`, `Lkrh`) to prevent update fragility.
 
 ## Blunders
@@ -68,4 +75,6 @@ Repository containing Android application patches (Disable Play Store updates, T
 - [2026-09-14] ChangePackageNamePatch hardcoded `oldPackage = "com.microsoft.emmx"` → Broke Edge Canary `com.microsoft.emmx.canary` renaming → Read package dynamically from AndroidManifest.xml.
 - [2026-09-14] `run_pipeline.sh` unhandled multi-target grep → Grepped multiple versions into `OUTPUT_APK` newline string → Filtered with `head -n 1`.
 - [2026-09-14] Edge Canary `GcStateAssertQueue` crash on short-circuiting JNI callback → `returnEarly()` on `requestDeviceToken` left `JniOnceCallback` unexecuted, triggering `LifetimeAssertException` on GC in Canary → Invoke callback with empty string before returning.
+- [2026-11-14] GitHub Packages returns 401 for the Morphe registry with a `gh auth token` (no `read:packages` scope) → Container builds fail on plugin/library resolution → Use the local composite builds (`../morphe-patches-gradle-plugin`, `../morphe-patcher`, `../morphe-patches-library`); CI's `GITHUB_TOKEN` still resolves the published artifacts.
+- [2026-11-14] Patcher 2.x CLI requires Java 21+ but the system default is Java 17 → `UnsupportedClassVersionError` → `run_pipeline.sh` auto-detects `/usr/lib/jvm/java-27-openjdk/bin/java`; pass `JAVA_BIN` to override.
 

@@ -1,6 +1,11 @@
 rootProject.name = "morphe-patches"
 
 pluginManagement {
+    // Use a local plugin checkout when present (development/offline builds).
+    if (file("../morphe-patches-gradle-plugin").exists()) {
+        includeBuild("../morphe-patches-gradle-plugin")
+    }
+
     repositories {
         mavenLocal()
         gradlePluginPortal()
@@ -20,7 +25,7 @@ pluginManagement {
 }
 
 plugins {
-    id("app.morphe.patches") version "1.3.2"
+    id("app.morphe.patches") version "2.1.0"
 }
 
 settings {

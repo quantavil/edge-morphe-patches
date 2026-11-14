@@ -11,7 +11,7 @@ val EDGE_COMPATIBILITY = Compatibility(
     packageName = "com.microsoft.emmx",
     name = "Microsoft Edge",
     targets = listOf(
-        AppTarget(version = "152.0.4191.65"),
+        AppTarget(version = "157.0.4341.53"),
     ),
 )
 
@@ -22,7 +22,7 @@ val EDGE_CANARY_COMPATIBILITY = Compatibility(
     packageName = "com.microsoft.emmx.canary",
     name = "Microsoft Edge Canary",
     targets = listOf(
-        AppTarget(version = "155.0.4269.0"),
+        AppTarget(version = "159.0.4399.0"),
     ),
 )
 

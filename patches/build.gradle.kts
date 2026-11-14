@@ -12,9 +12,13 @@ patches {
     }
 }
 
+// Separate configuration so gson is available at runtime for the
+// generatePatchesList task but never bundled into the APK.
+val patchListGeneratorClasspath = configurations.create("patchListGeneratorClasspath")
+
 dependencies {
-    // Used by JsonGenerator.
-    implementation(libs.gson)
+    compileOnly(libs.gson)
+    patchListGeneratorClasspath(libs.gson)
 
     // Required due to smali, or build fails. Can be removed once smali is bumped.
     implementation(libs.guava)
@@ -26,31 +30,16 @@ dependencies {
 }
 
 tasks {
-    register<JavaExec>("checkStringResources") {
-        description = "Checks resource strings for invalid formatting"
-
-        dependsOn(build)
-
-        classpath = sourceSets["main"].runtimeClasspath
-        mainClass.set("app.morphe.patches.util.resource.CheckStringResourcesKt")
-    }
-
     register<JavaExec>("generatePatchesList") {
         description = "Build patch with patch list"
 
         dependsOn(build)
 
-        classpath = sourceSets["main"].runtimeClasspath
+        classpath = sourceSets["main"].runtimeClasspath + patchListGeneratorClasspath
         mainClass.set("app.morphe.util.PatchListGeneratorKt")
     }
     // Used by gradle-semantic-release-plugin.
     publish {
         dependsOn("generatePatchesList")
-    }
-}
-
-kotlin {
-    compilerOptions {
-        freeCompilerArgs = listOf("-Xcontext-parameters")
     }
 }

@@ -25,7 +25,7 @@
 
 **🎯 Supported versions:**
 
-| 152.0.4191.65 |
+| 157.0.4341.53 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description |
@@ -44,7 +44,7 @@
 
 **🎯 Supported versions:**
 
-| 155.0.4269.0 |
+| 159.0.4399.0 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description |

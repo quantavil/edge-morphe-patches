@@ -12,6 +12,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # Reset
 
 FORCE_FLAG=""
+TARGET="stable"
 
 # Parse flags
 while [[ "$#" -gt 0 ]]; do
@@ -19,17 +20,60 @@ while [[ "$#" -gt 0 ]]; do
         -f|--force)
             FORCE_FLAG="-f"
             ;;
+        --canary)
+            TARGET="canary"
+            ;;
         *)
             echo -e "${RED}Unknown option: $1${NC}"
-            echo "Usage: $0 [-f|--force]"
+            echo "Usage: $0 [-f|--force] [--canary]"
             exit 1
             ;;
     esac
     shift
 done
 
+COMPAT_FILE="patches/src/main/kotlin/app/morphe/patches/all/misc/EdgeCompatibility.kt"
+
+if [ "$TARGET" = "canary" ]; then
+    COMPAT_MARKER="EDGE_CANARY_COMPATIBILITY"
+    BASE_APKS=("edge_canary_base.apkm" "edge_canary_base.apk")
+    PREFERRED_PACKAGE="com.microsoft.emmx.canary"
+    OUTPUT_PREFIX="edge-canary-patched"
+else
+    COMPAT_MARKER="EDGE_COMPATIBILITY"
+    BASE_APKS=("edge_base.apkm" "edge_base.apk")
+    PREFERRED_PACKAGE="com.microsoft.emmx"
+    OUTPUT_PREFIX="edge-patched"
+fi
+
+# The Morphe CLI requires Java 21 or newer.
+JAVA_BIN="${JAVA_BIN:-}"
+if [ -z "$JAVA_BIN" ]; then
+    for candidate in \
+        /usr/lib/jvm/java-27-openjdk/bin/java \
+        /usr/lib/jvm/java-26-openjdk/bin/java \
+        /usr/lib/jvm/java-25-openjdk/bin/java \
+        /usr/lib/jvm/java-24-openjdk/bin/java \
+        /usr/lib/jvm/java-23-openjdk/bin/java \
+        /usr/lib/jvm/java-22-openjdk/bin/java \
+        /usr/lib/jvm/java-21-openjdk/bin/java; do
+        if [ -x "$candidate" ]; then
+            JAVA_BIN="$candidate"
+            break
+        fi
+    done
+fi
+JAVA_BIN="${JAVA_BIN:-java}"
+
+JAVA_MAJOR=$("$JAVA_BIN" -version 2>&1 | sed -n 's/.*version "\([0-9]*\).*/\1/p' | head -n 1)
+if [ -z "$JAVA_MAJOR" ] || [ "$JAVA_MAJOR" -lt 21 ]; then
+    echo -e "${RED}❌ Error: Morphe CLI needs Java 21 or newer (found: $JAVA_BIN).${NC}"
+    echo "Set JAVA_BIN to a Java 21+ executable and re-run."
+    exit 1
+fi
+
 echo -e "${BLUE}==================================================${NC}"
-echo -e "${CYAN}🚀 Edge Morphe Patches: One-Click Build & Deploy${NC}"
+echo -e "${CYAN}🚀 Edge Morphe Patches: One-Click Build & Deploy (${TARGET})${NC}"
 echo -e "${BLUE}==================================================${NC}"
 
 # 1. Check if ADB device is connected
@@ -67,11 +111,20 @@ echo -e "${GREEN}✅ Temporary files cleaned.${NC}"
 # 4. Patch base APK and install
 # Note: "Change package name" is disabled because ReAndroid's package name renamer post-processor
 # fails on Microsoft Edge's complex layout/color resources (specifically m3_navigation_item_ripple_color.xml).
-echo -e "\n${YELLOW}[4/5] Patching edge_base.apk (Applying Telemetry, Copilot, & Play Store updates patches)...${NC}"
-if [ ! -f "edge_base.apk" ]; then
-    echo -e "${RED}❌ Error: edge_base.apk not found in the root directory.${NC}"
+BASE_APK=""
+for candidate in "${BASE_APKS[@]}"; do
+    if [ -f "$candidate" ]; then
+        BASE_APK="$candidate"
+        break
+    fi
+done
+
+if [ -z "$BASE_APK" ]; then
+    echo -e "${RED}❌ Error: No base APK found. Expected one of: ${BASE_APKS[*]}${NC}"
     exit 1
 fi
+
+echo -e "\n${YELLOW}[4/5] Patching $BASE_APK (Telemetry, Copilot, Play Store updates & news notifications)...${NC}"
 
 if [ -n "$DEVICE_SERIAL" ]; then
     echo -e "${YELLOW}🗑️ Uninstalling previous Edge packages to prevent signature conflicts...${NC}"
@@ -80,28 +133,32 @@ if [ -n "$DEVICE_SERIAL" ]; then
     adb -s "$DEVICE_SERIAL" uninstall com.microsoft.emmx.canary || true
 fi
 
-EDGE_VERSION=$(grep -oP 'version\s*=\s*"\K[0-9.]+' patches/src/main/kotlin/app/morphe/patches/all/misc/EdgeCompatibility.kt | head -n 1 || echo "152.0.4191.65")
-OUTPUT_APK="edge-patched-${EDGE_VERSION}-arm64.apk"
+EDGE_VERSION=$(awk "/$COMPAT_MARKER = Compatibility/,/^\)/" "$COMPAT_FILE" | grep -oP 'version\s*=\s*"\K[0-9.]+' | head -n 1)
+if [ -z "$EDGE_VERSION" ]; then
+    echo -e "${RED}❌ Error: Could not read the target version from $COMPAT_FILE${NC}"
+    exit 1
+fi
+OUTPUT_APK="${OUTPUT_PREFIX}-${EDGE_VERSION}-arm64.apk"
 
 # Enable error handling specific to patching
 set +e
-java -jar morphe-cli.jar patch \
+"$JAVA_BIN" -jar morphe-cli.jar patch \
     $FORCE_FLAG \
     $INSTALL_FLAG \
     -e "Disable Play Store updates" \
     -e "Telemetry elimination" \
     -e "Copilot feature toggle" \
     -e "Disable news notifications" \
-    --patches="$MPP_FILE" \
+    -p "$MPP_FILE" \
     -o "$OUTPUT_APK" \
-    edge_base.apk
+    "$BASE_APK"
 PATCH_EXIT_CODE=$?
 set -e
 
 if [ $PATCH_EXIT_CODE -ne 0 ]; then
     echo -e "${RED}❌ Error: Patching failed with exit code $PATCH_EXIT_CODE.${NC}"
     echo -e "${YELLOW}💡 Troubleshooting Tip:${NC}"
-    echo "If you updated 'edge_base.apk' to a newer version, the patcher might fail because of compatibility metadata."
+    echo "If you updated the base APK to a newer version, the patcher might fail because of compatibility metadata."
     echo "You can:"
     echo "1. Run the script with the force flag to bypass checks: ./run_pipeline.sh --force (or -f)"
     echo "2. Or edit the compatible versions target in the patches source code (e.g. Constants configuration files)."
@@ -113,10 +170,11 @@ echo -e "${GREEN}✅ Patching completed successfully!${NC}"
 # 5. Launch the application on the device (if connected)
 if [ -n "$DEVICE_SERIAL" ]; then
     echo -e "\n${YELLOW}[5/5] Launching the patched application...${NC}"
-    # Since package name is not changed, it is com.microsoft.emmx, com.microsoft.emmx.beta, or com.microsoft.emmx.canary
     ALL_PACKAGES=$(adb shell pm list packages | grep -oE "com\.microsoft\.emmx(\.beta|\.canary)?" || true)
-    
-    if echo "$ALL_PACKAGES" | grep -q "com.microsoft.emmx.canary"; then
+
+    if echo "$ALL_PACKAGES" | grep -q "$PREFERRED_PACKAGE"; then
+        PACKAGE_NAME="$PREFERRED_PACKAGE"
+    elif echo "$ALL_PACKAGES" | grep -q "com.microsoft.emmx.canary"; then
         PACKAGE_NAME="com.microsoft.emmx.canary"
     elif echo "$ALL_PACKAGES" | grep -q "com.microsoft.emmx.beta"; then
         PACKAGE_NAME="com.microsoft.emmx.beta"

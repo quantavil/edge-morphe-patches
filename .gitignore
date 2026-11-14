@@ -46,3 +46,6 @@ node_modules/
 
 # Audit report
 audit.md
+
+# APKM bundles
+*.apkm

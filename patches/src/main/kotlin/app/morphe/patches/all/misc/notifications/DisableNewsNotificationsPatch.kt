@@ -5,7 +5,7 @@ import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patches.all.misc.EDGE_CANARY_COMPATIBILITY
 import app.morphe.patches.all.misc.EDGE_COMPATIBILITY
-import app.morphe.util.returnEarly
+import app.morphe.patcher.util.returnEarly
 import java.util.logging.Logger
 
 private const val BING_NOTIFICATION_SERVICE_CLASS =
