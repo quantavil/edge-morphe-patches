@@ -1,3 +1,10 @@
+## [1.37.2](https://github.com/quantavil/edge-morphe-patches/compare/v1.37.1...v1.37.2) (2026-11-14)
+
+
+### Bug Fixes
+
+* preserve Edge account state helpers in Copilot patch ([7a61342](https://github.com/quantavil/edge-morphe-patches/commit/7a61342e29a7323412caf1d4f4cbe7b0b943b314))
+
 ## [1.37.1](https://github.com/quantavil/edge-morphe-patches/compare/v1.37.0...v1.37.1) (2026-11-14)
 
 
